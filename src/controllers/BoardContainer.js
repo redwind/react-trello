@@ -7,10 +7,12 @@ import PropTypes from 'prop-types'
 import pick from 'lodash/pick'
 import isEqual from 'lodash/isEqual'
 import Lane from './Lane'
-import { PopoverWrapper } from 'react-popopo'
+import {PopoverWrapper} from 'react-popopo'
 
 import * as boardActions from 'rt/actions/BoardActions'
 import * as laneActions from 'rt/actions/LaneActions'
+
+let reducerType = null
 
 class BoardContainer extends Component {
   state = {
@@ -20,6 +22,9 @@ class BoardContainer extends Component {
   componentDidMount() {
     const {actions, eventBusHandle} = this.props
     actions.loadBoard(this.props.data)
+
+    reducerType = this.props.reducerType
+
     if (eventBusHandle) {
       this.wireEventBus()
     }
@@ -30,10 +35,12 @@ class BoardContainer extends Component {
     const {data, reducerData, onDataChange} = this.props
     if (nextProps.reducerData && !isEqual(reducerData, nextProps.reducerData)) {
       onDataChange(nextProps.reducerData)
+      reducerType = this.props.reducerType
     }
     if (nextProps.data && !isEqual(nextProps.data, data)) {
       this.props.actions.loadBoard(nextProps.data)
       onDataChange(nextProps.data)
+      reducerType = this.props.reducerType
     }
   }
 
@@ -200,8 +207,10 @@ class BoardContainer extends Component {
         </PopoverWrapper>
         {canAddLanes && (
           <Container orientation="horizontal">
-            {editable && !addLaneMode ? <components.NewLaneSection t={t} onClick={this.showEditableLane} /> : (
-              addLaneMode && <components.NewLaneForm onCancel={this.hideEditableLane} onAdd={this.addNewLane} t={t}/>
+            {editable && !addLaneMode ? (
+              <components.NewLaneSection t={t} onClick={this.showEditableLane} />
+            ) : (
+              addLaneMode && <components.NewLaneForm onCancel={this.hideEditableLane} onAdd={this.addNewLane} t={t} />
             )}
           </Container>
         )}
@@ -246,10 +255,11 @@ BoardContainer.propTypes = {
   laneDropClass: PropTypes.string,
   onCardMoveAcrossLanes: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
+  reducerType: _propTypes.default.string.isRequired
 }
 
 BoardContainer.defaultProps = {
-  t: v=>v,
+  t: v => v,
   onDataChange: () => {},
   handleDragStart: () => {},
   handleDragEnd: () => {},
@@ -272,12 +282,24 @@ BoardContainer.defaultProps = {
 }
 
 const mapStateToProps = state => {
-  return state.lanes ? {reducerData: state} : {}
+  // return state.lanes ? {reducerData: state} : {}
+
+  const curState = state.get(`${reducerType}`) || {}
+
+  console.log(
+    'react_trello_BoardContainer_mapStateToProps',
+    reducerType,
+    state,
+    curState,
+    curState.get ? curState.get('lanes') : 'not have curState.get("lanes")',
+    curState.lanes ? curState.lanes : 'not have curState.lanes'
+  )
+
+  return {
+    reducerData: {lanes: curState.lanes || []}
+  }
 }
 
 const mapDispatchToProps = dispatch => ({actions: bindActionCreators({...boardActions, ...laneActions}, dispatch)})
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(BoardContainer)
+export default connect(mapStateToProps, mapDispatchToProps)(BoardContainer)

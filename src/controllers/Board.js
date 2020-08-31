@@ -13,29 +13,17 @@ const middlewares = process.env.REDUX_LOGGING ? [logger] : []
 export default class Board extends Component {
   constructor({id}) {
     super()
-    this.store = this.getStore()
     this.id = id || uuidv1()
-  }
-
-  getStore = () => {
-    //When you create multiple boards, unique stores are created for isolation
-    return createStore(boardReducer, applyMiddleware(...middlewares))
   }
 
   render() {
     const {id, className, components} = this.props
     const allClassNames = classNames('react-trello-board', className || '')
     return (
-      <Provider store={this.store}>
-        <>
-          <components.GlobalStyle />
-          <BoardContainer
-            id={this.id}
-            {...this.props}
-            className={allClassNames}
-          />
-       </>
-      </Provider>
+      <>
+        <components.GlobalStyle />
+        <BoardContainer id={this.id} {...this.props} className={allClassNames} />
+      </>
     )
   }
 }
