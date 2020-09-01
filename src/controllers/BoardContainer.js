@@ -255,7 +255,7 @@ BoardContainer.propTypes = {
   laneDropClass: PropTypes.string,
   onCardMoveAcrossLanes: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
-  reducerType: _propTypes.default.string.isRequired
+  reducerType: PropTypes.default.string.isRequired
 }
 
 BoardContainer.defaultProps = {
