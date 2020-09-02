@@ -285,6 +285,7 @@ const mapStateToProps = state => {
   // return state.lanes ? {reducerData: state} : {}
 
   const curState = state.get(`${reducerType}`) || {}
+  const lanes = (curState.get && curState.get('lanes')) || curState.lanes || []
 
   console.log(
     'react_trello_BoardContainer_mapStateToProps',
@@ -296,10 +297,13 @@ const mapStateToProps = state => {
   )
 
   return {
-    reducerData: {lanes: curState.lanes || []}
+    reducerData: {lanes: lanes}
   }
 }
 
 const mapDispatchToProps = dispatch => ({actions: bindActionCreators({...boardActions, ...laneActions}, dispatch)})
 
-export default connect(mapStateToProps, mapDispatchToProps)(BoardContainer)
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BoardContainer)

@@ -27,7 +27,7 @@ var _Container = _interopRequireDefault(require("../dnd/Container"));
 
 var _Draggable = _interopRequireDefault(require("../dnd/Draggable"));
 
-var _propTypes2 = _interopRequireDefault(require("prop-types"));
+var _propTypes = _interopRequireDefault(require("prop-types"));
 
 var _pick = _interopRequireDefault(require("lodash/pick"));
 
@@ -262,41 +262,41 @@ class BoardContainer extends _react.Component {
 }
 
 BoardContainer.propTypes = {
-  id: _propTypes2.default.string,
-  components: _propTypes2.default.object,
-  actions: _propTypes2.default.object,
-  data: _propTypes2.default.object.isRequired,
-  reducerData: _propTypes2.default.object,
-  onDataChange: _propTypes2.default.func,
-  eventBusHandle: _propTypes2.default.func,
-  onLaneScroll: _propTypes2.default.func,
-  onCardClick: _propTypes2.default.func,
-  onBeforeCardDelete: _propTypes2.default.func,
-  onCardDelete: _propTypes2.default.func,
-  onCardAdd: _propTypes2.default.func,
-  onLaneAdd: _propTypes2.default.func,
-  onLaneDelete: _propTypes2.default.func,
-  onLaneClick: _propTypes2.default.func,
-  onLaneUpdate: _propTypes2.default.func,
-  laneSortFunction: _propTypes2.default.func,
-  draggable: _propTypes2.default.bool,
-  collapsibleLanes: _propTypes2.default.bool,
-  editable: _propTypes2.default.bool,
-  canAddLanes: _propTypes2.default.bool,
-  hideCardDeleteIcon: _propTypes2.default.bool,
-  handleDragStart: _propTypes2.default.func,
-  handleDragEnd: _propTypes2.default.func,
-  handleLaneDragStart: _propTypes2.default.func,
-  handleLaneDragEnd: _propTypes2.default.func,
-  style: _propTypes2.default.object,
-  tagStyle: _propTypes2.default.object,
-  laneDraggable: _propTypes2.default.bool,
-  cardDraggable: _propTypes2.default.bool,
-  cardDragClass: _propTypes2.default.string,
-  laneDragClass: _propTypes2.default.string,
-  laneDropClass: _propTypes2.default.string,
-  onCardMoveAcrossLanes: _propTypes2.default.func.isRequired,
-  t: _propTypes2.default.func.isRequired,
+  id: _propTypes.default.string,
+  components: _propTypes.default.object,
+  actions: _propTypes.default.object,
+  data: _propTypes.default.object.isRequired,
+  reducerData: _propTypes.default.object,
+  onDataChange: _propTypes.default.func,
+  eventBusHandle: _propTypes.default.func,
+  onLaneScroll: _propTypes.default.func,
+  onCardClick: _propTypes.default.func,
+  onBeforeCardDelete: _propTypes.default.func,
+  onCardDelete: _propTypes.default.func,
+  onCardAdd: _propTypes.default.func,
+  onLaneAdd: _propTypes.default.func,
+  onLaneDelete: _propTypes.default.func,
+  onLaneClick: _propTypes.default.func,
+  onLaneUpdate: _propTypes.default.func,
+  laneSortFunction: _propTypes.default.func,
+  draggable: _propTypes.default.bool,
+  collapsibleLanes: _propTypes.default.bool,
+  editable: _propTypes.default.bool,
+  canAddLanes: _propTypes.default.bool,
+  hideCardDeleteIcon: _propTypes.default.bool,
+  handleDragStart: _propTypes.default.func,
+  handleDragEnd: _propTypes.default.func,
+  handleLaneDragStart: _propTypes.default.func,
+  handleLaneDragEnd: _propTypes.default.func,
+  style: _propTypes.default.object,
+  tagStyle: _propTypes.default.object,
+  laneDraggable: _propTypes.default.bool,
+  cardDraggable: _propTypes.default.bool,
+  cardDragClass: _propTypes.default.string,
+  laneDragClass: _propTypes.default.string,
+  laneDropClass: _propTypes.default.string,
+  onCardMoveAcrossLanes: _propTypes.default.func.isRequired,
+  t: _propTypes.default.func.isRequired,
   reducerType: _propTypes.default.string.isRequired
 };
 BoardContainer.defaultProps = {
@@ -325,10 +325,11 @@ BoardContainer.defaultProps = {
 const mapStateToProps = state => {
   // return state.lanes ? {reducerData: state} : {}
   const curState = state.get("".concat(reducerType)) || {};
+  const lanes = curState.get && curState.get('lanes') || curState.lanes || [];
   console.log('react_trello_BoardContainer_mapStateToProps', reducerType, state, curState, curState.get ? curState.get('lanes') : 'not have curState.get("lanes")', curState.lanes ? curState.lanes : 'not have curState.lanes');
   return {
     reducerData: {
-      lanes: curState.lanes || []
+      lanes: lanes
     }
   };
 };
